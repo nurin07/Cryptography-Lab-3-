@@ -1,0 +1,45 @@
+import random
+from sympy import isprime, mod_inverse
+
+def generate_keys(p=None):
+    if p is None:
+        while True:
+            p = random.randint(1000, 5000)
+            if isprime(p):
+                break
+    g = random.randint(2, p-1)
+    x = random.randint(1, p-2)
+    y = pow(g, x, p)
+    public_key = (p, g, y)
+    private_key = x
+    return public_key, private_key
+
+def encrypt(public_key, plaintext):
+    p, g, y = public_key
+    k = random.randint(1, p-2)
+    a = pow(g, k, p)
+    b = (plaintext * pow(y, k, p)) % p
+    return a, b
+
+def decrypt(private_key, public_key, ciphertext):
+    p, g, y = public_key
+    a, b = ciphertext
+    x = private_key
+    s = pow(a, x, p)
+    plaintext = (b * mod_inverse(s, p)) % p
+    return plaintext
+
+def main():
+    message = 1234  # Example message
+    public_key, private_key = generate_keys()
+    print(f"Public Key: {public_key}")
+    print(f"Private Key: {private_key}")
+
+    ciphertext = encrypt(public_key, message)
+    print(f"Ciphertext: {ciphertext}")
+
+    decrypted_message = decrypt(private_key, public_key, ciphertext)
+    print(f"Decrypted Message: {decrypted_message}")
+
+if __name__ == "__main__":
+    main()

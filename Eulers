@@ -1,0 +1,25 @@
+def phi(n):
+    
+    result = n  # Start with n
+    p = 2
+    
+    # Check for each number p if it is a factor of n
+    while p * p <= n:
+        # If p is a prime factor of n, then do the following
+        if n % p == 0:
+            # If p is a factor, divide n by p as long as it is divisible
+            while n % p == 0:
+                n //= p
+            # Apply the formula to update the result
+            result -= result // p
+        p += 1
+    
+    # If n has a prime factor greater than sqrt(n)
+    if n > 1:
+        result -= result // n
+    
+    return result
+
+# Example usage:
+n = 10
+print(f"phi({n}) = {phi(n)}")  # Output: phi(10) = 4
